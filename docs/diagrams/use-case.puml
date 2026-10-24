@@ -1,0 +1,28 @@
+@startuml smart-drainage-use-cases
+title Smart Drainage System — Use Case Diagram
+left to right direction
+skinparam shadowing false
+
+actor Operator
+actor Administrator
+actor "ESP32 / Simulator" as Device
+
+rectangle "Smart Drainage System" {
+  usecase "UC-01 View current level and freshness" as UC1
+  usecase "UC-02 Explore level history and gaps" as UC2
+  usecase "UC-03 Review events and warnings" as UC3
+  usecase "UC-04 Inspect device and sensor health" as UC4
+  usecase "UC-05 Configure thresholds" as UC5
+  usecase "Submit measurement" as UC6
+  usecase "View trend estimate (optional)" as UC7
+}
+
+Operator --> UC1
+Operator --> UC2
+Operator --> UC3
+Operator --> UC4
+Operator ..> UC7
+Administrator --> UC4
+Administrator --> UC5
+Device --> UC6
+@enduml

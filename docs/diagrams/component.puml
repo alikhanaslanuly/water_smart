@@ -1,0 +1,41 @@
+@startuml smart-drainage-components
+title Smart Drainage System — Component Diagram (design)
+skinparam shadowing false
+top to bottom direction
+
+package "Device layer" {
+  [Water-level sensor / Python scenario] as Sensor
+  [ESP32 firmware / Simulator] as Device
+  Sensor --> Device : measured distance or modelled level
+}
+
+package "Application layer" {
+  [HTTP handlers + API-key middleware] as Http
+  [Telemetry validation + deduplication] as Validate
+  [Threshold state + event service] as State
+  [Freshness/status service] as Fresh
+  [Trend estimator (optional)] as Trend
+  [Repository] as Repo
+
+  Device --> Http : POST /api/v1/measurements
+  Http --> Validate
+  Validate --> State : valid readings only
+  Validate --> Fresh : contact timestamp
+  State --> Repo
+  Fresh --> Repo
+  Trend --> Repo
+  Validate --> Repo : accepted/invalid diagnostic record
+}
+
+database "PostgreSQL\ndevices │ thresholds │ measurements │ events" as Db
+Repo --> Db
+
+package "Interface layer" {
+  [React + TypeScript dashboard] as UI
+}
+
+UI --> Http : GET status / history / events / thresholds
+Http --> Fresh
+Http --> Repo
+Http --> Trend : optional
+@enduml
