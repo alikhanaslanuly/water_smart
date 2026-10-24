@@ -1,0 +1,26 @@
+// Smart Drainage System - Use Case Diagram
+// Render: dot -Tpng -Gdpi=150 use-case.dot -o ../assets/use-case.png
+digraph usecases {
+  rankdir=LR; bgcolor="white"; pad=0.3; nodesep=0.35; ranksep=1.6; compound=true;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, color="#6b7c93", fillcolor="#f7f9fb", margin="0.2,0.12"];
+  edge [color="#445566", arrowsize=0.8];
+
+  subgraph actors {
+    node [fillcolor="#e3eef9"];
+    operator [label="OPERATOR"]; admin [label="ADMINISTRATOR"]; device [label="DEVICE / SIMULATOR"];
+  }
+  subgraph cluster_sys {
+    label="Smart Drainage System — user goals"; fontname="DejaVu Sans"; fontsize=13; color="#a9bccf"; style="rounded";
+    uc1 [label="UC-01\nView current level\nand freshness"];
+    uc2 [label="UC-02\nExplore level history\nand gaps"];
+    uc3 [label="UC-03\nReview events\nand warnings"];
+    uc4 [label="UC-04\nInspect device\nand sensor health"];
+    uc5 [label="UC-05\nConfigure thresholds"];
+    uc6 [label="Submit measurement"];
+    uc7 [label="View trend estimate\n(optional)", style="rounded,dashed", fillcolor="white"];
+  }
+  operator -> uc1; operator -> uc2; operator -> uc3; operator -> uc4;
+  operator -> uc7 [style=dashed];
+  admin -> uc4; admin -> uc5;
+  device -> uc6;
+}
