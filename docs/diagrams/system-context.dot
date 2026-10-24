@@ -1,0 +1,20 @@
+// Smart Drainage System - System Context Diagram
+// Render: dot -Tpng -Gdpi=150 system-context.dot -o ../assets/system-context.png
+digraph context {
+  rankdir=LR; bgcolor="white"; pad=0.3; nodesep=0.5; ranksep=0.9;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, color="#6b7c93", fillcolor="#f7f9fb", margin="0.2,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#445566", arrowsize=0.8];
+
+  operator [label="Operator\nmaintenance staff", fillcolor="#eef5fd"];
+  admin    [label="Administrator\nthreshold settings", fillcolor="#eef5fd"];
+  device   [label="ESP32 + level sensor\nor Python simulator", fillcolor="#f3f6f3"];
+  wifi     [label="Wi-Fi / local network", shape=ellipse];
+  system   [label="SMART DRAINAGE SYSTEM\nGo REST API · PostgreSQL\nReact + TypeScript dashboard", fillcolor="#dbe9f6", penwidth=2, color="#2c5f8a"];
+  pump     [label="Simulated pump state\noptional; not physical control", style="rounded,dashed", color="#888888"];
+
+  device -> wifi   [label="telemetry"];
+  wifi   -> system [label="HTTP JSON POST\n/api/v1/measurements"];
+  operator -> system [label="status · history · alerts"];
+  admin    -> system [label="configure thresholds"];
+  system   -> pump [label="optional simulation", style=dashed];
+}

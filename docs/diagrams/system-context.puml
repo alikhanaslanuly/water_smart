@@ -1,0 +1,21 @@
+@startuml system-context
+title Smart Drainage System - System Context Diagram
+skinparam shadowing false
+skinparam defaultFontSize 13
+left to right direction
+
+actor "Operator\n(drainage maintenance staff)" as Operator
+actor "Administrator" as Admin
+
+rectangle "Water level sensor\n(ultrasonic) + ESP32\n(or Python simulator)" as Device
+rectangle "Smart Drainage System\n(API server, PostgreSQL,\nweb dashboard)" as System #LightBlue
+cloud "Wi-Fi network" as WiFi
+rectangle "Pump\n(optional / simulated)" as Pump #LightGray
+
+Device --> WiFi : water level measurements\n(HTTP REST, JSON)
+WiFi --> System : POST /api/v1/measurements
+System --> Operator : current level, status,\nhistory, warnings
+Operator --> System : view data
+Admin --> System : configure thresholds
+System ..> Pump : pump command\n(optional, with safety checks)
+@enduml

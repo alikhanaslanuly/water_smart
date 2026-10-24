@@ -1,0 +1,31 @@
+// Smart Drainage System - Component Diagram (draft)
+// Render: dot -Tpng -Gdpi=150 component.dot -o ../assets/component.png
+digraph components {
+  rankdir=TB; bgcolor="white"; pad=0.3; nodesep=0.45; ranksep=0.6; compound=true;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, color="#6b7c93", fillcolor="#f7f9fb", margin="0.2,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#445566", arrowsize=0.8];
+
+  subgraph cluster_device { label="Device layer (Alikhan)"; fontname="DejaVu Sans"; style="rounded"; color="#b7c6a8";
+    sensor [label="Level sensor /\nscenario generator", fillcolor="#f3f6f3"];
+    fw     [label="ESP32 firmware /\nPython simulator\n(median-of-5, bounded queue)", fillcolor="#f3f6f3"];
+    sensor -> fw;
+  }
+  subgraph cluster_app { label="Application layer — Go API (Bekarys)"; fontname="DejaVu Sans"; style="rounded"; color="#a9bccf";
+    http   [label="HTTP handlers\n+ API-key middleware", fillcolor="#e3eef9"];
+    valid  [label="Validation\n& deduplication"];
+    state  [label="Threshold state\n& event logging"];
+    fresh  [label="Connectivity\n& validity status"];
+    trend  [label="Trend estimation\n(optional)", style="rounded,dashed", fillcolor="white"];
+    repo   [label="Repository\nSQL migrations"];
+    http -> valid; valid -> state [label="valid readings"]; valid -> fresh [label="contact time"];
+    valid -> repo [label="accepted / invalid\ndiagnostic record"]; state -> repo; fresh -> repo;
+    http -> trend [style=dashed]; trend -> repo [style=dashed];
+  }
+  db [label="PostgreSQL\ndevices · thresholds\nmeasurements · events", shape=cylinder, style=filled, fillcolor="#e8f0f8"];
+  subgraph cluster_ui { label="Interface layer (Nursultan)"; fontname="DejaVu Sans"; style="rounded"; color="#9fcfb8";
+    ui [label="React + TypeScript\n5 interface views", fillcolor="#e6f2ec"];
+  }
+  fw -> http [label="POST JSON\n/api/v1/measurements"];
+  ui -> http [label="GET / PUT REST", dir=both];
+  repo -> db;
+}
