@@ -1,0 +1,41 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Go
+backend/bin/
+*.exe
+*.test
+*.out
+vendor/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+
+# Python (simulator)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Firmware build output
+iot/**/.pio/
+iot/**/build/
+
+# Database and runtime data
+*.sqlite
+pgdata/
+*.log
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
